@@ -1,0 +1,31 @@
+# env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# dependencies / build
+node_modules
+.next
+dist
+build
+coverage
+.venv
+__pycache__
+.pytest_cache
+*.pyc
+*.pyo
+*.tsbuildinfo
+
+# local data / caches
+.DS_Store
+artifacts
+.minio
+postgres-data
+redis-data
+
+# IDE
+.vscode
+.idea

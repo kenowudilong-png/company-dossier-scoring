@@ -1,0 +1,107 @@
+services:
+  pg:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: ci
+      POSTGRES_PASSWORD: ci_dev
+      POSTGRES_DB: companyintel
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ci -d companyintel"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  parser:
+    build:
+      context: ../services/parser
+    env_file:
+      - ../.env
+    environment:
+      DATABASE_URL: postgresql://ci:ci_dev@pg:5432/companyintel
+      MINIO_ENDPOINT: minio:9000
+      MINIO_BUCKET: company-intel-files
+    ports:
+      - "8001:8001"
+    depends_on:
+      pg:
+        condition: service_healthy
+      minio:
+        condition: service_started
+      redis:
+        condition: service_started
+
+  scoring:
+    build:
+      context: ../services/scoring
+    env_file:
+      - ../.env
+    environment:
+      DATABASE_URL: postgresql://ci:ci_dev@pg:5432/companyintel
+    ports:
+      - "8002:8002"
+    depends_on:
+      pg:
+        condition: service_healthy
+
+  studio:
+    build:
+      context: ../services/studio
+    env_file:
+      - ../.env
+    environment:
+      DATABASE_URL: postgresql://ci:ci_dev@pg:5432/companyintel
+    ports:
+      - "8003:8003"
+    depends_on:
+      pg:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ../apps/web
+    env_file:
+      - ../.env
+    environment:
+      DATABASE_URL: postgresql://ci:ci_dev@pg:5432/companyintel
+      PARSER_BASE_URL: http://parser:8001
+      SCORING_BASE_URL: http://scoring:8002
+      STUDIO_BASE_URL: http://studio:8003
+      MINIO_ENDPOINT: minio:9000
+      MINIO_BUCKET: company-intel-files
+    ports:
+      - "3000:3000"
+    depends_on:
+      pg:
+        condition: service_healthy
+      parser:
+        condition: service_started
+      scoring:
+        condition: service_started
+      studio:
+        condition: service_started
+
+volumes:
+  pg_data:
+  minio_data:

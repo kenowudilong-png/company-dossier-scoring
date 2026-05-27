@@ -1,0 +1,12 @@
+{
+  "name": "company-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "lint": "pnpm --filter web lint",
+    "test": "pnpm --filter web test",
+    "dev:web": "pnpm --filter web dev",
+    "demo:e2e": "node tools/demo/e2e-smoke.mjs"
+  },
+  "devDependencies": {}
+}

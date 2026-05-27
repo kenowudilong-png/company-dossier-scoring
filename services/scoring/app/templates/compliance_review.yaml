@@ -1,0 +1,37 @@
+id: compliance_review
+name: 合规审查
+version: 1
+dimensions:
+  - id: licenses
+    name: 资质许可
+    weight: 25
+    min_trust_tier: 0.7
+    required_evidence: 经营资质、有效期、覆盖范围
+  - id: litigation
+    name: 诉讼记录
+    weight: 25
+    min_trust_tier: 0.7
+    required_evidence: 未决诉讼、被执行、败诉率
+  - id: penalties
+    name: 行政处罚
+    weight: 20
+    min_trust_tier: 0.7
+    required_evidence: 近三年处罚、金额、性质
+  - id: data_compliance
+    name: 数据合规
+    weight: 15
+    min_trust_tier: 0.5
+    required_evidence: 个保法、出境合规、等保
+  - id: related_parties
+    name: 关联方合规
+    weight: 15
+    min_trust_tier: 0.7
+    required_evidence: 关联交易、利益输送风险
+aggregation:
+  veto_rules:
+    - dimension: litigation
+      threshold: 20
+      effect: cap_total_at_40
+    - dimension: penalties
+      threshold: 20
+      effect: cap_total_at_40

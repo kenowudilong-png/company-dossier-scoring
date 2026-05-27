@@ -1,0 +1,39 @@
+id: investment_dd
+name: 投资尽调
+version: 1
+dimensions:
+  - id: business_model
+    name: 商业模式
+    weight: 15
+    min_trust_tier: 0.7
+    required_evidence: 收入来源、客户、增长逻辑
+  - id: financial_performance
+    name: 财务表现
+    weight: 25
+    min_trust_tier: 0.9
+    required_evidence: 营收、利润、现金流、财务表格
+  - id: market_position
+    name: 市场地位
+    weight: 15
+    min_trust_tier: 0.5
+    required_evidence: 市场份额、行业排名、客户覆盖
+  - id: management_team
+    name: 管理团队
+    weight: 15
+    min_trust_tier: 0.7
+    required_evidence: 核心团队履历、治理结构
+  - id: technology_product
+    name: 技术与产品
+    weight: 15
+    min_trust_tier: 0.7
+    required_evidence: 技术壁垒、专利、产品口碑
+  - id: risk_factors
+    name: 风险因素
+    weight: 15
+    min_trust_tier: 0.5
+    required_evidence: 诉讼、监管、客户依赖、关联交易
+aggregation:
+  veto_rules:
+    - dimension: risk_factors
+      threshold: 20
+      effect: cap_total_at_50

@@ -1,0 +1,31 @@
+id: esg_review
+name: ESG
+version: 1
+dimensions:
+  - id: environment
+    name: 环境 (E)
+    weight: 35
+    min_trust_tier: 0.7
+    required_evidence: 碳排放、能耗、废物、环保处罚
+  - id: social_employee
+    name: 社会-员工
+    weight: 15
+    min_trust_tier: 0.5
+    required_evidence: 员工权益、安全事故、薪酬公平
+  - id: social_supply
+    name: 社会-供应链
+    weight: 15
+    min_trust_tier: 0.5
+    required_evidence: 供应商管理、社区影响
+  - id: governance_compliance
+    name: 治理-合规
+    weight: 20
+    min_trust_tier: 0.7
+    required_evidence: 反腐、反贿赂、信息披露
+  - id: governance_board
+    name: 治理-董事会
+    weight: 15
+    min_trust_tier: 0.7
+    required_evidence: 独立性、多样性、薪酬激励
+aggregation:
+  veto_rules: []

@@ -1,0 +1,42 @@
+id: credit_assessment
+name: 信用评估
+version: 1
+dimensions:
+  - id: financial_health
+    name: 财务健康度
+    weight: 30
+    min_trust_tier: 0.9
+    required_evidence: 资产负债率、流动比率、速动比率
+  - id: debt_servicing
+    name: 偿债能力
+    weight: 25
+    min_trust_tier: 0.9
+    required_evidence: 现金流覆盖、利息保障倍数
+  - id: operating_stability
+    name: 经营稳定性
+    weight: 20
+    min_trust_tier: 0.7
+    required_evidence: 营收波动、客户集中度、应收账款周转
+  - id: industry_outlook
+    name: 行业景气
+    weight: 10
+    min_trust_tier: 0.5
+    required_evidence: 行业增速、政策导向、周期性
+  - id: governance
+    name: 治理结构
+    weight: 10
+    min_trust_tier: 0.7
+    required_evidence: 股权结构、独董、关联交易
+  - id: negative_signals
+    name: 负面信息
+    weight: 5
+    min_trust_tier: 0.5
+    required_evidence: 逾期、失信、被执行、处罚
+aggregation:
+  veto_rules:
+    - dimension: financial_health
+      threshold: 20
+      effect: cap_total_at_40
+    - dimension: negative_signals
+      threshold: 30
+      effect: cap_total_at_50
